@@ -1,0 +1,47 @@
+import { hasSupabase, supabase } from "./supabase";
+import { DEMO_CARS, DEMO_CATEGORIES } from "@/data/demo";
+import type { Category } from "@/data/categories";
+import type { Car } from "@/data/cars";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const carFromRow = (r: any): Car => ({
+  id: r.id,
+  name: r.name,
+  category: r.category,
+  seats: r.seats,
+  transmission: r.transmission,
+  pricePerDay: r.price_per_day,
+  image: r.image,
+  year: r.year,
+  fuel: r.fuel,
+  features: r.features ?? [],
+  isActive: r.is_active,
+});
+
+export const carToRow = (c: Omit<Car, "id">) => ({
+  name: c.name,
+  category: c.category,
+  seats: c.seats,
+  transmission: c.transmission,
+  price_per_day: c.pricePerDay,
+  image: c.image,
+  year: c.year,
+  fuel: c.fuel,
+  features: c.features,
+  is_active: c.isActive,
+});
+
+export async function getCategories(): Promise<Category[]> {
+  if (!hasSupabase) return DEMO_CATEGORIES;
+  const { data } = await supabase.from("categories").select("*").order("sort_order").order("name");
+  return data ?? [];
+}
+
+/** onlyActive=true للموقع، false للداشبورد */
+export async function getCars(onlyActive = true): Promise<Car[]> {
+  if (!hasSupabase) return DEMO_CARS;
+  let q = supabase.from("cars").select("*").order("created_at");
+  if (onlyActive) q = q.eq("is_active", true);
+  const { data } = await q;
+  return (data ?? []).map(carFromRow);
+}

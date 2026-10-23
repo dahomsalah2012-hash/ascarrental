@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-cairo), system-ui, sans-serif;
+  --color-navy: #0b3b2e;
+  --color-navy-deep: #072a21;
+  --color-brand: #f5b82e;
+  --color-brand-dark: #e0a41a;
+  --color-brand-ink: #b7791f;
+  --color-cream: #fbf5e6;
+  --color-ink: #14231d;
+}
+
+@utility container-x {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 72rem;
+  padding-inline: 1rem;
+}
