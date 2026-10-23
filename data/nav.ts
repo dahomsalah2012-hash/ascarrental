@@ -1,8 +1,8 @@
 export const NAV_LINKS = [
-  { label: "الرئيسية", href: "/" },
-  { label: "عنا", href: "/#why-us" },
-  { label: "خدماتنا", href: "/#how-it-works" },
-  { label: "أسطول السيارات", href: "/cars" },
-  { label: "الأسئلة الشائعة", href: "/#contact" },
-  { label: "اتصل بنا", href: "/#contact" },
-];
+  { key: "home", href: "/" },
+  { key: "about", href: "/#why-us" },
+  { key: "services", href: "/#how-it-works" },
+  { key: "fleet", href: "/cars" },
+  { key: "faq", href: "/#contact" },
+  { key: "contact", href: "/#contact" },
+] as const;

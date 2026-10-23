@@ -7,10 +7,10 @@ import type { Car } from "@/data/cars";
 const carFromRow = (r: any): Car => ({
   id: r.id,
   name: r.name,
+  nameEn: r.name_en ?? null,
   category: r.category,
   seats: r.seats,
   transmission: r.transmission,
-  pricePerDay: r.price_per_day,
   image: r.image,
   year: r.year,
   fuel: r.fuel,
@@ -20,10 +20,10 @@ const carFromRow = (r: any): Car => ({
 
 export const carToRow = (c: Omit<Car, "id">) => ({
   name: c.name,
+  name_en: c.nameEn,
   category: c.category,
   seats: c.seats,
   transmission: c.transmission,
-  price_per_day: c.pricePerDay,
   image: c.image,
   year: c.year,
   fuel: c.fuel,

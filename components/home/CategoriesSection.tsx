@@ -1,11 +1,13 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Briefcase, CalendarDays, Fuel, Settings2, User, X } from "lucide-react";
+import { ArrowLeft, Briefcase, Fuel, Settings2, User, X } from "lucide-react";
 import type { Category } from "@/data/categories";
 import type { Car } from "@/data/cars";
 import Button from "@/components/ui/Button";
 import Photo from "@/components/ui/Photo";
 import SectionTitle from "@/components/ui/SectionTitle";
+import { pick } from "@/lib/dict";
+import { useI18n } from "@/components/layout/LangProvider";
 
 type Props = {
   categories: Category[];
@@ -14,6 +16,8 @@ type Props = {
 };
 
 export default function CategoriesSection({ categories, cars: allCars, initialCategory = null }: Props) {
+  const { lang, t } = useI18n();
+  const c18 = t.categories;
   const [selected, setSelected] = useState<string | null>(initialCategory);
   const outletRef = useRef<HTMLDivElement>(null);
 
@@ -29,29 +33,30 @@ export default function CategoriesSection({ categories, cars: allCars, initialCa
   return (
     <section id="categories" className="container-x scroll-mt-24 py-14">
       <div className="flex items-end justify-between">
-        <SectionTitle title="فئات السيارات" />
+        <SectionTitle title={c18.title} />
         <button onClick={() => setSelected("all")}
           className="flex items-center gap-1 text-sm font-semibold text-navy hover:underline">
-          عرض جميع السيارات <ArrowLeft size={16} />
+          {c18.viewAll} <ArrowLeft size={16} className="ltr:rotate-180" />
         </button>
       </div>
 
       <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {categories.map((c) => {
           const active = c.slug === selected;
+          const name = pick(lang, c.name, c.name_en);
           return (
             <article key={c.slug}
               className={`overflow-hidden rounded-2xl bg-white/60 pb-5 text-center shadow-sm ring-1 transition-shadow ${active ? "ring-2 ring-brand" : "ring-black/5"}`}>
-              <Photo src={c.image} alt={c.name} className="h-36 w-full" sizes="(min-width:1024px) 25vw, 50vw" />
-              <h3 className="mt-4 text-lg font-extrabold">{c.name}</h3>
+              <Photo src={c.image} alt={name} className="h-36 w-full" sizes="(min-width:1024px) 25vw, 50vw" />
+              <h3 className="mt-4 text-lg font-extrabold">{name}</h3>
               <p className="mt-2 flex items-center justify-center gap-4 text-xs text-slate-600">
-                <span className="flex items-center gap-1"><User size={14} /> {c.seats} ركاب</span>
-                <span className="flex items-center gap-1"><Briefcase size={14} /> {c.bags} حقائب</span>
+                <span className="flex items-center gap-1"><User size={14} /> {c.seats} {c18.seats}</span>
+                <span className="flex items-center gap-1"><Briefcase size={14} /> {c.bags} {c18.bags}</span>
               </p>
               <div className="px-5">
                 <button onClick={() => setSelected(c.slug)} aria-pressed={active}
                   className={`mt-4 w-full rounded-xl border border-brand px-5 py-2.5 text-sm font-bold transition-colors ${active ? "bg-brand text-navy-deep" : "text-navy hover:bg-brand hover:text-navy-deep"}`}>
-                  استعرض السيارات
+                  {c18.browse}
                 </button>
               </div>
             </article>
@@ -65,46 +70,45 @@ export default function CategoriesSection({ categories, cars: allCars, initialCa
           <div className="mt-10 rounded-3xl bg-emerald-50 p-6 md:p-8">
             <div className="flex items-center justify-between">
               <h3 className="border-b-[3px] border-brand pb-1 text-2xl font-extrabold">
-                {isAll ? "جميع السيارات" : category?.name}
+                {isAll ? c18.all : category ? pick(lang, category.name, category.name_en) : ""}
               </h3>
               <button onClick={() => setSelected(null)}
                 className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm font-semibold text-navy hover:bg-white">
-                <X size={16} /> إغلاق
+                <X size={16} /> {c18.close}
               </button>
             </div>
 
             {cars.length === 0 ? (
-              <p className="mt-6 text-slate-600">لا توجد سيارات متاحة في هذه الفئة حالياً.</p>
+              <p className="mt-6 text-slate-600">{c18.empty}</p>
             ) : (
               <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {cars.map((car) => (
-                  <article key={car.id} className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
-                    <Photo src={car.image} alt={car.name} className="h-48 w-full" sizes="(min-width:1024px) 33vw, 50vw" />
-                    <div className="p-5">
-                      <h3 className="text-lg font-extrabold">{car.name}</h3>
-                      <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600">
-                        <span className="flex items-center gap-1"><User size={14} /> {car.seats} ركاب</span>
-                        <span className="flex items-center gap-1"><Settings2 size={14} /> {car.transmission}</span>
-                        {car.year && <span className="flex items-center gap-1"><CalendarDays size={14} /> {car.year}</span>}
-                        {car.fuel && <span className="flex items-center gap-1"><Fuel size={14} /> {car.fuel}</span>}
-                      </p>
-                      {car.features.length > 0 && (
-                        <ul className="mt-3 flex flex-wrap gap-1.5">
-                          {car.features.map((f) => (
-                            <li key={f} className="rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-navy">{f}</li>
-                          ))}
-                        </ul>
-                      )}
-                      <div className="mt-4 flex items-center justify-between">
-                        <p>
-                          <span className="text-xl font-extrabold text-brand-ink">{car.pricePerDay.toLocaleString("ar-EG")}</span>{" "}
-                          <span className="text-xs text-slate-500">ج.م / اليوم</span>
+                {cars.map((car) => {
+                  const carName = pick(lang, car.name, car.nameEn);
+                  return (
+                    <article key={car.id} className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
+                      <Photo src={car.image} alt={carName} className="h-48 w-full" sizes="(min-width:1024px) 33vw, 50vw" />
+                      <div className="p-5">
+                        <h3 className="text-lg font-extrabold">{carName}</h3>
+                        {car.year && (
+                          <p className="mt-1 text-sm font-bold text-brand-ink">{c18.model} {car.year}</p>
+                        )}
+                        <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600">
+                          <span className="flex items-center gap-1"><User size={14} /> {car.seats} {c18.seats}</span>
+                          <span className="flex items-center gap-1"><Settings2 size={14} /> {t.transmission[car.transmission] ?? car.transmission}</span>
+                          {car.fuel && <span className="flex items-center gap-1"><Fuel size={14} /> {t.fuels[car.fuel] ?? car.fuel}</span>}
                         </p>
-                        <Button href="/#contact">احجز الآن</Button>
+                        {car.features.length > 0 && (
+                          <ul className="mt-3 flex flex-wrap gap-1.5">
+                            {car.features.map((f) => (
+                              <li key={f} className="rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-navy">{f}</li>
+                            ))}
+                          </ul>
+                        )}
+                        <Button href="/#contact" className="mt-4 w-full">{c18.bookNow}</Button>
                       </div>
-                    </div>
-                  </article>
-                ))}
+                    </article>
+                  );
+                })}
               </div>
             )}
           </div>

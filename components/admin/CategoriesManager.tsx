@@ -6,7 +6,7 @@ import type { Category } from "@/data/categories";
 import ImageUpload from "./ImageUpload";
 import { BTN, BTN_GHOST, INPUT, LABEL } from "./styles";
 
-const EMPTY: Category = { slug: "", name: "", seats: 5, bags: 2, image: "", sort_order: 0 };
+const EMPTY: Category = { slug: "", name: "", name_en: null, seats: 5, bags: 2, image: "", sort_order: 0 };
 
 export default function CategoriesManager() {
   const [items, setItems] = useState<Category[]>([]);
@@ -61,13 +61,21 @@ export default function CategoriesManager() {
       {form && (
         <form onSubmit={save} className="grid gap-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 md:grid-cols-2">
           <label className="block">
-            <span className={LABEL}>الاسم</span>
+            <span className={LABEL}>الاسم بالعربي</span>
             <input required value={form.name} onChange={(e) => set("name", e.target.value)} className={INPUT} />
+          </label>
+          <label className="block">
+            <span className={LABEL}>الاسم بالإنجليزي</span>
+            <input dir="ltr" value={form.name_en ?? ""} onChange={(e) => set("name_en", e.target.value || null)} className={INPUT} />
           </label>
           <label className="block">
             <span className={LABEL}>Slug (إنجليزي صغير وشرطات)</span>
             <input required dir="ltr" pattern="[a-z0-9\-]+" disabled={!isNew} value={form.slug}
               onChange={(e) => set("slug", e.target.value)} className={`${INPUT} disabled:bg-slate-100`} />
+          </label>
+          <label className="block">
+            <span className={LABEL}>الترتيب</span>
+            <input type="number" required value={form.sort_order} onChange={(e) => set("sort_order", Number(e.target.value))} className={INPUT} />
           </label>
           <label className="block">
             <span className={LABEL}>عدد الركاب</span>
@@ -76,10 +84,6 @@ export default function CategoriesManager() {
           <label className="block">
             <span className={LABEL}>عدد الحقائب</span>
             <input type="number" min={0} required value={form.bags} onChange={(e) => set("bags", Number(e.target.value))} className={INPUT} />
-          </label>
-          <label className="block">
-            <span className={LABEL}>الترتيب</span>
-            <input type="number" required value={form.sort_order} onChange={(e) => set("sort_order", Number(e.target.value))} className={INPUT} />
           </label>
           <div className="md:col-span-2">
             <ImageUpload folder="categories" value={form.image} onChange={(url) => set("image", url)} />
@@ -98,7 +102,7 @@ export default function CategoriesManager() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={c.image} alt="" className="h-14 w-24 rounded-lg bg-slate-200 object-cover" />
             <div className="min-w-0 flex-1">
-              <p className="font-bold">{c.name}</p>
+              <p className="font-bold">{c.name}{c.name_en && <span className="font-normal text-slate-500"> · <bdi dir="ltr">{c.name_en}</bdi></span>}</p>
               <p className="text-xs text-slate-500">
                 <bdi dir="ltr">{c.slug}</bdi> · {c.seats} ركاب · {c.bags} حقائب
               </p>

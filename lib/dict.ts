@@ -1,0 +1,171 @@
+export type Lang = "ar" | "en";
+
+const ar = {
+  brand: "الرحلة لتأجير السيارات",
+  metaDesc: "تأجير سيارات بأفضل الأسعار وخدمة موثوقة لتجربة سفر مريحة وآمنة",
+  locale: "ar-EG",
+  menu: "القائمة",
+  switchTo: "EN",
+  bookNow: "احجز الآن",
+  nav: { home: "الرئيسية", about: "عنا", services: "خدماتنا", fleet: "أسطول السيارات", faq: "الأسئلة الشائعة", contact: "اتصل بنا" },
+  hero: {
+    title1: "سيارتك جاهزة",
+    title2: "لأي وجهة",
+    sub1: "تأجير سيارات بأفضل الأسعار وخدمة موثوقة",
+    sub2: "لتجربة سفر مريحة وآمنة",
+    alt: "سيارة تويوتا أمام أفق المدينة",
+    features: [
+      { title: "أسطول حديث", sub: "ومتنوع" },
+      { title: "تأمين شامل", sub: "واطمئنان" },
+      { title: "دعم متواصل", sub: "على مدار الساعة" },
+    ],
+  },
+  search: {
+    pickup: "مكان الاستلام",
+    selectCity: "اختر المدينة",
+    from: "تاريخ الاستلام",
+    to: "تاريخ الإعادة",
+    carType: "نوع السيارة",
+    allCars: "جميع السيارات",
+    submit: "ابحث عن سيارة",
+    cities: ["القاهرة", "الجيزة", "الإسكندرية", "شرم الشيخ", "الغردقة"],
+  },
+  categories: {
+    title: "فئات السيارات",
+    viewAll: "عرض جميع السيارات",
+    seats: "ركاب",
+    bags: "حقائب",
+    browse: "استعرض السيارات",
+    all: "جميع السيارات",
+    close: "إغلاق",
+    empty: "لا توجد سيارات متاحة في هذه الفئة حالياً.",
+    model: "موديل",
+    bookNow: "احجز الآن",
+  },
+  how: {
+    title: "كيف تعمل؟",
+    subtitle: "خطوات بسيطة لتبدأ رحلتك",
+    steps: [
+      { title: "اختر السيارة", text: "حدد نوع السيارة التي تناسب احتياجك" },
+      { title: "حدد المواعيد", text: "اختر تاريخ ووقت الاستلام والإعادة" },
+      { title: "أكمل الحجز", text: "أدخل بياناتك وأكمل الحجز بسهولة" },
+      { title: "استلم سيارتك", text: "استلم سيارتك في الموعد وانطلق في رحلتك" },
+    ],
+  },
+  why: {
+    title: "لماذا تختارنا؟",
+    reasons: [
+      { title: "خدمة عملاء مميزة", text: "دعم سريع واحترافي" },
+      { title: "فروع متعددة", text: "في أهم المدن والمطارات" },
+      { title: "سيارات حديثة", text: "صيانة دورية ونظافة مستمرة" },
+      { title: "أسعار تنافسية", text: "أفضل الأسعار لجميع الفئات" },
+    ],
+  },
+  cta: {
+    title: "جاهز لرحلتك القادمة؟",
+    text: "احجز الآن واستمتع بتجربة تأجير سيارات سهلة وآمنة",
+    alt: "مفاتيح سيارة",
+  },
+  footer: {
+    tagline: "سفرك يبدأ من هنا",
+    address: "مدينة الشيخ زايد، الجيزة",
+    followUs: "تابعنا على",
+    rights: "جميع الحقوق محفوظة لـ الرحلة لتأجير السيارات © 2026",
+  },
+  floating: {
+    call: "اتصل بنا",
+    whatsapp: "تواصل عبر واتساب",
+    message: "مرحباً، أريد الاستفسار عن تأجير سيارة",
+  },
+  transmission: { "أوتوماتيك": "أوتوماتيك", "يدوي": "يدوي" } as Record<string, string>,
+  fuels: { "بنزين": "بنزين", "ديزل": "ديزل", "هايبرد": "هايبرد", "كهرباء": "كهرباء" } as Record<string, string>,
+};
+
+type Dict = typeof ar;
+
+const en: Dict = {
+  brand: "Alrihla Car Rental",
+  metaDesc: "Car rental at the best prices with reliable service for a comfortable and safe trip",
+  locale: "en-US",
+  menu: "Menu",
+  switchTo: "عربي",
+  bookNow: "Book now",
+  nav: { home: "Home", about: "About", services: "Services", fleet: "Our Fleet", faq: "FAQ", contact: "Contact" },
+  hero: {
+    title1: "Your car is ready",
+    title2: "for any destination",
+    sub1: "Car rental at the best prices with reliable service",
+    sub2: "for a comfortable and safe trip",
+    alt: "Toyota car in front of the city skyline",
+    features: [
+      { title: "Modern fleet", sub: "and diverse" },
+      { title: "Full insurance", sub: "and peace of mind" },
+      { title: "Continuous support", sub: "24/7" },
+    ],
+  },
+  search: {
+    pickup: "Pick-up location",
+    selectCity: "Select city",
+    from: "Pick-up date",
+    to: "Return date",
+    carType: "Car type",
+    allCars: "All cars",
+    submit: "Find a car",
+    cities: ["Cairo", "Giza", "Alexandria", "Sharm El Sheikh", "Hurghada"],
+  },
+  categories: {
+    title: "Car categories",
+    viewAll: "View all cars",
+    seats: "seats",
+    bags: "bags",
+    browse: "Browse cars",
+    all: "All cars",
+    close: "Close",
+    empty: "No cars are currently available in this category.",
+    model: "Model",
+    bookNow: "Book now",
+  },
+  how: {
+    title: "How it works",
+    subtitle: "Simple steps to start your trip",
+    steps: [
+      { title: "Choose your car", text: "Pick the car type that suits your needs" },
+      { title: "Select dates", text: "Choose your pick-up and return date and time" },
+      { title: "Complete your booking", text: "Enter your details and book easily" },
+      { title: "Pick up your car", text: "Collect your car on time and hit the road" },
+    ],
+  },
+  why: {
+    title: "Why choose us?",
+    reasons: [
+      { title: "Outstanding service", text: "Fast, professional support" },
+      { title: "Multiple branches", text: "In major cities and airports" },
+      { title: "Modern cars", text: "Regular maintenance and constant cleaning" },
+      { title: "Competitive prices", text: "Best prices for all categories" },
+    ],
+  },
+  cta: {
+    title: "Ready for your next trip?",
+    text: "Book now and enjoy an easy, safe car rental experience",
+    alt: "Car keys",
+  },
+  footer: {
+    tagline: "Your journey starts here",
+    address: "Sheikh Zayed City, Giza",
+    followUs: "Follow us",
+    rights: "All rights reserved to Alrihla Car Rental © 2026",
+  },
+  floating: {
+    call: "Call us",
+    whatsapp: "Chat on WhatsApp",
+    message: "Hello, I would like to inquire about renting a car",
+  },
+  transmission: { "أوتوماتيك": "Automatic", "يدوي": "Manual" },
+  fuels: { "بنزين": "Petrol", "ديزل": "Diesel", "هايبرد": "Hybrid", "كهرباء": "Electric" },
+};
+
+export const DICT: Record<Lang, Dict> = { ar, en };
+
+/** يرجّع الاسم الإنجليزي لو اللغة إنجليزي وموجود، وإلا العربي */
+export const pick = (lang: Lang, arText: string, enText?: string | null) =>
+  lang === "en" && enText ? enText : arText;

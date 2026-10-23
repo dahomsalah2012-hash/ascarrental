@@ -9,8 +9,8 @@ import { BTN, BTN_GHOST, INPUT, LABEL } from "./styles";
 
 const FUELS = ["بنزين", "ديزل", "هايبرد", "كهرباء"];
 const EMPTY: Car = {
-  id: "", name: "", category: "", seats: 5, transmission: "أوتوماتيك",
-  pricePerDay: 0, image: "", year: null, fuel: null, features: [], isActive: true,
+  id: "", name: "", nameEn: null, category: "", seats: 5, transmission: "أوتوماتيك",
+  image: "", year: null, fuel: null, features: [], isActive: true,
 };
 
 export default function CarsManager() {
@@ -83,8 +83,12 @@ export default function CarsManager() {
       {form && (
         <form onSubmit={save} className="grid gap-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 md:grid-cols-2">
           <label className="block">
-            <span className={LABEL}>اسم السيارة</span>
+            <span className={LABEL}>اسم السيارة بالعربي</span>
             <input required value={form.name} onChange={(e) => set("name", e.target.value)} className={INPUT} />
+          </label>
+          <label className="block">
+            <span className={LABEL}>اسم السيارة بالإنجليزي</span>
+            <input dir="ltr" value={form.nameEn ?? ""} onChange={(e) => set("nameEn", e.target.value || null)} className={INPUT} />
           </label>
           <label className="block">
             <span className={LABEL}>الفئة</span>
@@ -93,8 +97,9 @@ export default function CarsManager() {
             </select>
           </label>
           <label className="block">
-            <span className={LABEL}>السعر في اليوم (ج.م)</span>
-            <input type="number" min={0} required value={form.pricePerDay} onChange={(e) => set("pricePerDay", Number(e.target.value))} className={INPUT} />
+            <span className={LABEL}>الموديل (سنة الصنع)</span>
+            <input type="number" required min={1990} max={2100} placeholder="2024" value={form.year ?? ""}
+              onChange={(e) => set("year", e.target.value ? Number(e.target.value) : null)} className={INPUT} />
           </label>
           <label className="block">
             <span className={LABEL}>عدد الركاب</span>
@@ -108,11 +113,6 @@ export default function CarsManager() {
             </select>
           </label>
           <label className="block">
-            <span className={LABEL}>سنة الموديل</span>
-            <input type="number" min={1990} max={2100} value={form.year ?? ""}
-              onChange={(e) => set("year", e.target.value ? Number(e.target.value) : null)} className={INPUT} />
-          </label>
-          <label className="block">
             <span className={LABEL}>نوع الوقود</span>
             <select value={form.fuel ?? ""} onChange={(e) => set("fuel", e.target.value || null)} className={INPUT}>
               <option value="">—</option>
@@ -122,7 +122,7 @@ export default function CarsManager() {
           <label className="block">
             <span className={LABEL}>المميزات (افصل بينها بفاصلة)</span>
             <input value={featuresText} onChange={(e) => setFeaturesText(e.target.value)}
-              placeholder="تكييف، بلوتوث، كاميرا خلفية" className={INPUT} />
+              placeholder="تكييف / A/C، بلوتوث / Bluetooth" className={INPUT} />
           </label>
           <div className="md:col-span-2">
             <ImageUpload folder="cars" value={form.image} onChange={(url) => set("image", url)} />
@@ -145,9 +145,9 @@ export default function CarsManager() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={car.image} alt="" className="h-14 w-24 rounded-lg bg-slate-200 object-cover" />
             <div className="min-w-0 flex-1">
-              <p className="font-bold">{car.name}</p>
+              <p className="font-bold">{car.name}{car.nameEn && <span className="font-normal text-slate-500"> · <bdi dir="ltr">{car.nameEn}</bdi></span>}</p>
               <p className="text-xs text-slate-500">
-                {catName(car.category)} · {car.pricePerDay.toLocaleString("ar-EG")} ج.م / اليوم
+                {catName(car.category)}{car.year ? ` · موديل ${car.year}` : ""}
               </p>
             </div>
             <button onClick={() => toggle(car)}
