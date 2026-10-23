@@ -1,13 +1,14 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { ArrowLeft, Briefcase, Fuel, Settings2, User, X } from "lucide-react";
 import type { Category } from "@/data/categories";
 import type { Car } from "@/data/cars";
-import Button from "@/components/ui/Button";
+import BookButton from "@/components/booking/BookButton";
 import Photo from "@/components/ui/Photo";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { pick } from "@/lib/dict";
 import { useI18n } from "@/components/layout/LangProvider";
+import { useBooking } from "@/components/booking/BookingProvider";
 
 type Props = {
   categories: Category[];
@@ -18,8 +19,13 @@ type Props = {
 export default function CategoriesSection({ categories, cars: allCars, initialCategory = null }: Props) {
   const { lang, t } = useI18n();
   const c18 = t.categories;
-  const [selected, setSelected] = useState<string | null>(initialCategory);
+  const { category: selected, setCategory: setSelected, searchTick } = useBooking();
   const outletRef = useRef<HTMLDivElement>(null);
+
+  // لو الرابط فيه ?category=... افتح الفئة دي
+  useEffect(() => {
+    if (initialCategory) setSelected(initialCategory);
+  }, [initialCategory, setSelected]);
 
   const isAll = selected === "all";
   const category = categories.find((c) => c.slug === selected);
@@ -28,7 +34,7 @@ export default function CategoriesSection({ categories, cars: allCars, initialCa
 
   useEffect(() => {
     if (showOutlet) outletRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [selected, showOutlet]);
+  }, [selected, showOutlet, searchTick]);
 
   return (
     <section id="categories" className="container-x scroll-mt-24 py-14">
@@ -104,7 +110,7 @@ export default function CategoriesSection({ categories, cars: allCars, initialCa
                             ))}
                           </ul>
                         )}
-                        <Button href="/#contact" className="mt-4 w-full">{c18.bookNow}</Button>
+                        <BookButton car={car} className="mt-4 w-full">{c18.bookNow}</BookButton>
                       </div>
                     </article>
                   );

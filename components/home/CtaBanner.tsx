@@ -1,6 +1,6 @@
 "use client";
 import { ArrowLeft } from "lucide-react";
-import Button from "@/components/ui/Button";
+import BookButton from "@/components/booking/BookButton";
 import Photo from "@/components/ui/Photo";
 import { useI18n } from "@/components/layout/LangProvider";
 
@@ -13,9 +13,9 @@ export default function CtaBanner() {
           <h2 className="text-2xl font-extrabold">{t.cta.title}</h2>
           <p className="mt-2 text-sm text-slate-600">{t.cta.text}</p>
         </div>
-        <Button href="/cars" className="mx-8 md:mx-0">
+        <BookButton className="mx-8 md:mx-0">
           <ArrowLeft size={16} className="ltr:rotate-180" /> {t.bookNow}
-        </Button>
+        </BookButton>
         <Photo src="/images/cta-keys.jpg" alt={t.cta.alt} className="h-32 w-full md:h-full md:min-h-28" sizes="33vw" />
       </div>
     </section>

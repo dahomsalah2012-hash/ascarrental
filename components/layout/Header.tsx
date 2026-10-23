@@ -6,11 +6,13 @@ import { ArrowLeft, CalendarCheck, Menu, X } from "lucide-react";
 import Image from "next/image";
 import { NAV_LINKS } from "@/data/nav";
 import { useI18n } from "@/components/layout/LangProvider";
+import { useBooking } from "@/components/booking/BookingProvider";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { lang, setLang, t } = useI18n();
+  const { openBooking } = useBooking();
 
   return (
     <header className="sticky top-0 z-50 bg-navy/95 backdrop-blur">
@@ -34,10 +36,10 @@ export default function Header() {
             className="rounded-lg border border-white/30 px-3 py-1.5 text-sm font-semibold text-white hover:bg-white/10">
             {t.switchTo}
           </button>
-          <Link href="/cars"
+          <button onClick={() => openBooking()}
             className="hidden items-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-bold text-navy-deep transition-colors hover:bg-brand-dark sm:inline-flex">
             <CalendarCheck size={18} /> {t.bookNow} <ArrowLeft size={16} className="ltr:rotate-180" />
-          </Link>
+          </button>
           <button onClick={() => setOpen((v) => !v)} className="text-white lg:hidden"
             aria-label={t.menu} aria-expanded={open}>
             {open ? <X /> : <Menu />}

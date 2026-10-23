@@ -3,6 +3,7 @@ import { Cairo } from "next/font/google";
 import { cookies } from "next/headers";
 import SiteChrome from "@/components/layout/SiteChrome";
 import { LangProvider } from "@/components/layout/LangProvider";
+import { BookingProvider } from "@/components/booking/BookingProvider";
 import { DICT, type Lang } from "@/lib/dict";
 import "./globals.css";
 
@@ -23,7 +24,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang={lang} dir={lang === "ar" ? "rtl" : "ltr"} className={cairo.variable}>
       <body className="font-sans antialiased">
         <LangProvider initial={lang}>
-          <SiteChrome>{children}</SiteChrome>
+          <BookingProvider>
+            <SiteChrome>{children}</SiteChrome>
+          </BookingProvider>
         </LangProvider>
       </body>
     </html>
