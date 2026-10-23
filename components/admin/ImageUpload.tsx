@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { uploadImage } from "@/lib/admin-api";
 import { LABEL } from "./styles";
 
 type Props = { value: string; onChange: (url: string) => void; folder: "categories" | "cars" };
@@ -14,11 +14,9 @@ export default function ImageUpload({ value, onChange, folder }: Props) {
     if (!file) return;
     setBusy(true);
     setError("");
-    const ext = file.name.split(".").pop() ?? "jpg";
-    const path = `${folder}/${crypto.randomUUID()}.${ext}`;
-    const { error } = await supabase.storage.from("media").upload(path, file, { cacheControl: "31536000" });
-    if (error) setError(error.message);
-    else onChange(supabase.storage.from("media").getPublicUrl(path).data.publicUrl);
+    const res = await uploadImage(file, folder);
+    if (res.url) onChange(res.url);
+    else setError(res.error ?? "فشل الرفع");
     setBusy(false);
   }
 

@@ -1,8 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
-import { getCategories } from "@/lib/queries";
+import { adminGetCategories, deleteCategory, saveCategory } from "@/lib/admin-api";
 import type { Category } from "@/data/categories";
 import ImageUpload from "./ImageUpload";
 import { BTN, BTN_GHOST, INPUT, LABEL } from "./styles";
@@ -16,7 +15,7 @@ export default function CategoriesManager() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
-  const load = () => getCategories().then(setItems);
+  const load = () => adminGetCategories().then(setItems);
   useEffect(() => { load(); }, []);
 
   const set = <K extends keyof Category>(k: K, v: Category[K]) => setForm((f) => (f ? { ...f, [k]: v } : f));
@@ -38,19 +37,17 @@ export default function CategoriesManager() {
     if (!form.image) return setError("ارفع صورة للفئة");
     setBusy(true);
     setError("");
-    const { error } = isNew
-      ? await supabase.from("categories").insert(form)
-      : await supabase.from("categories").update(form).eq("slug", form.slug);
+    const err = await saveCategory(form, isNew);
     setBusy(false);
-    if (error) return setError(error.message.includes("duplicate") ? "الـ slug مستخدم قبل كده" : error.message);
+    if (err) return setError(err);
     setForm(null);
     load();
   }
 
   async function remove(c: Category) {
     if (!confirm(`حذف فئة "${c.name}"؟`)) return;
-    const { error } = await supabase.from("categories").delete().eq("slug", c.slug);
-    if (error) return alert("مش هينفع تحذف الفئة وفيها سيارات. احذف السيارات أو انقلها لفئة تانية الأول.");
+    const err = await deleteCategory(c.slug);
+    if (err) return alert(err);
     load();
   }
 
@@ -99,7 +96,7 @@ export default function CategoriesManager() {
         {items.map((c) => (
           <li key={c.slug} className="flex items-center gap-4 p-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={c.image} alt="" className="h-14 w-24 rounded-lg object-cover" />
+            <img src={c.image} alt="" className="h-14 w-24 rounded-lg bg-slate-200 object-cover" />
             <div className="min-w-0 flex-1">
               <p className="font-bold">{c.name}</p>
               <p className="text-xs text-slate-500">

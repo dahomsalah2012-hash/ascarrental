@@ -1,8 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
-import { carToRow, getCars, getCategories } from "@/lib/queries";
+import { adminGetCars, adminGetCategories, deleteCar, saveCar, toggleCar } from "@/lib/admin-api";
 import type { Category } from "@/data/categories";
 import type { Car } from "@/data/cars";
 import ImageUpload from "./ImageUpload";
@@ -23,10 +22,10 @@ export default function CarsManager() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
-  const load = () => getCars(false).then(setCars);
+  const load = () => adminGetCars().then(setCars);
   useEffect(() => {
     load();
-    getCategories().then(setCats);
+    adminGetCategories().then(setCats);
   }, []);
 
   const set = <K extends keyof Car>(k: K, v: Car[K]) => setForm((f) => (f ? { ...f, [k]: v } : f));
@@ -43,27 +42,24 @@ export default function CarsManager() {
     if (!form) return;
     if (!form.image) return setError("ارفع صورة للسيارة");
     const features = featuresText.split(/[,،]/).map((s) => s.trim()).filter(Boolean);
-    const row = carToRow({ ...form, features });
     setBusy(true);
     setError("");
-    const { error } = form.id
-      ? await supabase.from("cars").update(row).eq("id", form.id)
-      : await supabase.from("cars").insert(row);
+    const err = await saveCar({ ...form, features });
     setBusy(false);
-    if (error) return setError(error.message);
+    if (err) return setError(err);
     setForm(null);
     load();
   }
 
   async function remove(car: Car) {
     if (!confirm(`حذف "${car.name}"؟`)) return;
-    const { error } = await supabase.from("cars").delete().eq("id", car.id);
-    if (error) return alert(error.message);
+    const err = await deleteCar(car.id);
+    if (err) return alert(err);
     load();
   }
 
   async function toggle(car: Car) {
-    await supabase.from("cars").update({ is_active: !car.isActive }).eq("id", car.id);
+    await toggleCar(car);
     load();
   }
 
@@ -147,7 +143,7 @@ export default function CarsManager() {
         {shown.map((car) => (
           <li key={car.id} className="flex items-center gap-4 p-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={car.image} alt="" className="h-14 w-24 rounded-lg object-cover" />
+            <img src={car.image} alt="" className="h-14 w-24 rounded-lg bg-slate-200 object-cover" />
             <div className="min-w-0 flex-1">
               <p className="font-bold">{car.name}</p>
               <p className="text-xs text-slate-500">

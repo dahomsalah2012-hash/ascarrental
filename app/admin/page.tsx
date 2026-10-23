@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Session } from "@supabase/supabase-js";
-import { supabase } from "@/lib/supabase";
+import { hasSupabase, supabase } from "@/lib/supabase";
 import LoginForm from "@/components/admin/LoginForm";
 import CategoriesManager from "@/components/admin/CategoriesManager";
 import CarsManager from "@/components/admin/CarsManager";
@@ -15,6 +15,10 @@ export default function AdminPage() {
   const [tab, setTab] = useState<Tab>("categories");
 
   useEffect(() => {
+    if (!hasSupabase) {
+      setReady(true);
+      return;
+    }
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setReady(true);
@@ -24,7 +28,7 @@ export default function AdminPage() {
   }, []);
 
   if (!ready) return null;
-  if (!session) return <LoginForm />;
+  if (hasSupabase && !session) return <LoginForm />;
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "categories", label: "الفئات" },
@@ -38,12 +42,20 @@ export default function AdminPage() {
           <h1 className="text-lg font-extrabold">لوحة تحكم الرحلة</h1>
           <div className="flex items-center gap-4 text-sm">
             <Link href="/" className="text-white/80 hover:text-white">عرض الموقع</Link>
-            <button onClick={() => supabase.auth.signOut()} className="rounded-lg bg-white/10 px-3 py-1.5 hover:bg-white/20">
-              تسجيل الخروج
-            </button>
+            {hasSupabase && (
+              <button onClick={() => supabase.auth.signOut()} className="rounded-lg bg-white/10 px-3 py-1.5 hover:bg-white/20">
+                تسجيل الخروج
+              </button>
+            )}
           </div>
         </div>
       </header>
+
+      {!hasSupabase && (
+        <p className="bg-amber-100 py-2 text-center text-sm font-semibold text-amber-900">
+          وضع تجريبي: التعديلات بتتحفظ في المتصفح فقط ولا تظهر في الموقع
+        </p>
+      )}
 
       <main className="container-x py-8">
         <div className="flex gap-2 border-b border-slate-200">
