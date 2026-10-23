@@ -9,7 +9,7 @@ export default function Hero() {
   const { t } = useI18n();
   return (
     <section className="relative isolate overflow-hidden bg-navy-deep pb-24 pt-12 md:pb-32 md:pt-16">
-      <Photo src="/images/hero.jpg" alt={t.hero.alt} priority
+      <Photo src="/images/home-hero.jpg" alt={t.hero.alt} priority
         className="absolute inset-0 -z-20 !bg-transparent" />
       {/* طبقة تغميق ناحية الكلام عشان يبان على أي صورة */}
       <div className="absolute inset-0 -z-10 bg-linear-to-l from-black/85 via-black/55 to-black/10 ltr:bg-linear-to-r" />

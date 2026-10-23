@@ -16,7 +16,7 @@ export default function CtaBanner() {
         <Button href="/cars" className="mx-8 md:mx-0">
           <ArrowLeft size={16} className="ltr:rotate-180" /> {t.bookNow}
         </Button>
-        <Photo src="/images/keys.jpg" alt={t.cta.alt} className="h-32 w-full md:h-full md:min-h-28" sizes="33vw" />
+        <Photo src="/images/cta-keys.jpg" alt={t.cta.alt} className="h-32 w-full md:h-full md:min-h-28" sizes="33vw" />
       </div>
     </section>
   );

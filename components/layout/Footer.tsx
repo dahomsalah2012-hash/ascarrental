@@ -1,7 +1,7 @@
 "use client";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import Logo from "@/components/ui/Logo";
-import { EMAIL, FACEBOOK_URL, INSTAGRAM_URL, PHONE_DISPLAY, PHONE_TEL, TIKTOK_URL } from "@/data/contact";
+import { FACEBOOK_URL, INSTAGRAM_URL, PHONE_DISPLAY, PHONE_TEL, TIKTOK_URL } from "@/data/contact";
 import { useI18n } from "@/components/layout/LangProvider";
 
 type IconProps = { size?: number };
@@ -48,7 +48,6 @@ export default function Footer() {
             <Phone size={18} className="text-brand" />
             <a href={`tel:${PHONE_TEL}`} className="hover:text-brand"><bdi dir="ltr">{PHONE_DISPLAY}</bdi></a>
           </li>
-          <li className="flex items-center gap-2"><Mail size={18} className="text-brand" /> <bdi dir="ltr">{EMAIL}</bdi></li>
         </ul>
 
         <div className="md:justify-self-end">
