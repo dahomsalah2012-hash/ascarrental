@@ -1,29 +1,72 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cairo } from "next/font/google";
-import { cookies } from "next/headers";
 import SiteChrome from "@/components/layout/SiteChrome";
 import { LangProvider } from "@/components/layout/LangProvider";
 import { BookingProvider } from "@/components/booking/BookingProvider";
-import { DICT, type Lang } from "@/lib/dict";
+import { SEO } from "@/data/seo";
+import { SITE_URL } from "@/lib/site";
+import { FACEBOOK_URL, INSTAGRAM_URL, PHONE_TEL, TIKTOK_URL } from "@/data/contact";
 import "./globals.css";
 
-const cairo = Cairo({ subsets: ["arabic", "latin"], variable: "--font-cairo" });
+const cairo = Cairo({ subsets: ["arabic", "latin"], variable: "--font-cairo", display: "swap" });
 
-async function getLang(): Promise<Lang> {
-  return (await cookies()).get("lang")?.value === "en" ? "en" : "ar";
-}
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: SEO.ar.title,
+  description: SEO.ar.description,
+  keywords: [...SEO.ar.keywords, ...SEO.en.keywords],
+  applicationName: SEO.ar.siteName,
+  alternates: { canonical: "/" },
+  icons: { icon: "/images/Logo.png", apple: "/images/Logo.png" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: SEO.ar.siteName,
+    title: SEO.ar.title,
+    description: SEO.ar.description,
+    locale: "ar_EG",
+    alternateLocale: ["en_US"],
+    images: [{ url: "/images/Logo.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SEO.ar.title,
+    description: SEO.ar.description,
+    images: ["/images/Logo.png"],
+  },
+  robots: { index: true, follow: true },
+};
 
-export async function generateMetadata(): Promise<Metadata> {
-  const lang = await getLang();
-  return { title: DICT[lang].brand, description: DICT[lang].metaDesc };
-}
+export const viewport: Viewport = { themeColor: "#0b3b2e" };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const lang = await getLang();
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "AutoRental",
+  name: SEO.ar.siteName,
+  alternateName: SEO.en.siteName,
+  url: SITE_URL,
+  image: `${SITE_URL}/images/Logo.png`,
+  logo: `${SITE_URL}/images/Logo.png`,
+  telephone: PHONE_TEL,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Sheikh Zayed City",
+    addressRegion: "Giza",
+    addressCountry: "EG",
+  },
+  areaServed: ["Cairo", "Giza", "Alexandria", "Sharm El Sheikh", "Hurghada"],
+  sameAs: [FACEBOOK_URL, INSTAGRAM_URL, TIKTOK_URL].filter((url) => url !== "#"),
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang={lang} dir={lang === "ar" ? "rtl" : "ltr"} className={cairo.variable}>
+    <html lang="ar" dir="rtl" className={cairo.variable}>
       <body className="font-sans antialiased">
-        <LangProvider initial={lang}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <LangProvider>
           <BookingProvider>
             <SiteChrome>{children}</SiteChrome>
           </BookingProvider>

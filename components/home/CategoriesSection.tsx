@@ -13,10 +13,9 @@ import { useBooking } from "@/components/booking/BookingProvider";
 type Props = {
   categories: Category[];
   cars: Car[];
-  initialCategory?: string | null;
 };
 
-export default function CategoriesSection({ categories, cars: allCars, initialCategory = null }: Props) {
+export default function CategoriesSection({ categories, cars: allCars }: Props) {
   const { lang, t } = useI18n();
   const c18 = t.categories;
   const { category: selected, setCategory: setSelected, searchTick } = useBooking();
@@ -24,8 +23,9 @@ export default function CategoriesSection({ categories, cars: allCars, initialCa
 
   // لو الرابط فيه ?category=... افتح الفئة دي
   useEffect(() => {
-    if (initialCategory) setSelected(initialCategory);
-  }, [initialCategory, setSelected]);
+    const fromUrl = new URLSearchParams(window.location.search).get("category");
+    if (fromUrl) setSelected(fromUrl);
+  }, [setSelected]);
 
   const isAll = selected === "all";
   const category = categories.find((c) => c.slug === selected);

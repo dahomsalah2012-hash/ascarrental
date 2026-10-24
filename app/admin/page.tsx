@@ -15,10 +15,7 @@ export default function AdminPage() {
   const [tab, setTab] = useState<Tab>("categories");
 
   useEffect(() => {
-    if (!hasSupabase) {
-      setReady(true);
-      return;
-    }
+    if (!hasSupabase) return;
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setReady(true);
@@ -27,8 +24,11 @@ export default function AdminPage() {
     return () => sub.subscription.unsubscribe();
   }, []);
 
+  if (!hasSupabase) {
+    return <p className="p-8 text-center text-slate-600">مفاتيح Supabase غير مضافة في إعدادات المشروع.</p>;
+  }
   if (!ready) return null;
-  if (hasSupabase && !session) return <LoginForm />;
+  if (!session) return <LoginForm />;
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "categories", label: "الفئات" },
@@ -42,20 +42,12 @@ export default function AdminPage() {
           <h1 className="text-lg font-extrabold">لوحة تحكم الرحلة</h1>
           <div className="flex items-center gap-4 text-sm">
             <Link href="/" className="text-white/80 hover:text-white">عرض الموقع</Link>
-            {hasSupabase && (
-              <button onClick={() => supabase.auth.signOut()} className="rounded-lg bg-white/10 px-3 py-1.5 hover:bg-white/20">
-                تسجيل الخروج
-              </button>
-            )}
+            <button onClick={() => supabase.auth.signOut()} className="rounded-lg bg-white/10 px-3 py-1.5 hover:bg-white/20">
+              تسجيل الخروج
+            </button>
           </div>
         </div>
       </header>
-
-      {!hasSupabase && (
-        <p className="bg-amber-100 py-2 text-center text-sm font-semibold text-amber-900">
-          وضع تجريبي: التعديلات بتتحفظ في المتصفح فقط ولا تظهر في الموقع
-        </p>
-      )}
 
       <main className="container-x py-8">
         <div className="flex gap-2 border-b border-slate-200">
