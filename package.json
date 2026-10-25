@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@next/third-parties": "^16.4.3",
     "@supabase/supabase-js": "^2.118.0",
     "lucide-react": "^1.61.0",
     "next": "^16.4.2",
@@ -14,5 +15,9 @@
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2"
   },
-  "scripts": { "dev": "next dev", "build": "next build", "start": "next start" }
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  }
 }
