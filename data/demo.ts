@@ -8,12 +8,16 @@ export const DEMO_CATEGORIES: Category[] = [
   { slug: "offroad", name: "سيارات الدفع الرباعي", name_en: "4x4 cars", seats: 7, bags: 5, image: "/images/categories/offroad.jpg", sort_order: 4 },
 ];
 
-const car = (id: string, name: string, nameEn: string, category: string, seats: number, year: number): Car => ({
-  id, name, nameEn, category, seats, year,
-  transmission: "أوتوماتيك",
-  image: `/images/cars/${id}.jpg`,
-  fuel: null, features: [], isActive: true,
-});
+const car = (id: string, name: string, nameEn: string, category: string, seats: number, year: number): Car => {
+  const image = `/images/cars/${id}.jpg`;
+  return {
+    id, name, nameEn, category, seats, year,
+    transmission: "أوتوماتيك",
+    image,
+    images: [image],
+    fuel: null, features: [], isActive: true,
+  };
+};
 
 export const DEMO_CARS: Car[] = [
   car("kia-carens", "كيا كارنز", "Kia Carens", "family", 7, 2023),

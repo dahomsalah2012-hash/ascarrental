@@ -5,7 +5,8 @@ export type Car = {
   category: string; // slug الكاتيجوري
   seats: number;
   transmission: "أوتوماتيك" | "يدوي";
-  image: string;
+  image: string; // الصورة الرئيسية = أول صورة في images
+  images: string[];
   year: number | null; // الموديل
   fuel: string | null;
   features: string[];

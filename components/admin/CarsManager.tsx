@@ -4,13 +4,13 @@ import { Pencil, Plus, Trash2 } from "lucide-react";
 import { adminGetCars, adminGetCategories, deleteCar, saveCar, toggleCar } from "@/lib/admin-api";
 import type { Category } from "@/data/categories";
 import type { Car } from "@/data/cars";
-import ImageUpload from "./ImageUpload";
+import MultiImageUpload from "./MultiImageUpload";
 import { BTN, BTN_GHOST, INPUT, LABEL } from "./styles";
 
 const FUELS = ["بنزين", "ديزل", "هايبرد", "كهرباء"];
 const EMPTY: Car = {
   id: "", name: "", nameEn: null, category: "", seats: 5, transmission: "أوتوماتيك",
-  image: "", year: null, fuel: null, features: [], isActive: true,
+  image: "", images: [], year: null, fuel: null, features: [], isActive: true,
 };
 
 export default function CarsManager() {
@@ -40,11 +40,11 @@ export default function CarsManager() {
   async function save(e: React.FormEvent) {
     e.preventDefault();
     if (!form) return;
-    if (!form.image) return setError("ارفع صورة للسيارة");
+    if (form.images.length === 0) return setError("ارفع صورة واحدة على الأقل للسيارة");
     const features = featuresText.split(/[,،]/).map((s) => s.trim()).filter(Boolean);
     setBusy(true);
     setError("");
-    const err = await saveCar({ ...form, features });
+    const err = await saveCar({ ...form, image: form.images[0], features });
     setBusy(false);
     if (err) return setError(err);
     setForm(null);
@@ -125,7 +125,10 @@ export default function CarsManager() {
               placeholder="تكييف / A/C، بلوتوث / Bluetooth" className={INPUT} />
           </label>
           <div className="md:col-span-2">
-            <ImageUpload folder="cars" value={form.image} onChange={(url) => set("image", url)} />
+            <MultiImageUpload
+              value={form.images}
+              onChange={(urls) => setForm((f) => (f ? { ...f, images: urls, image: urls[0] ?? "" } : f))}
+            />
           </div>
           <label className="flex items-center gap-2 text-sm font-semibold md:col-span-2">
             <input type="checkbox" checked={form.isActive} onChange={(e) => set("isActive", e.target.checked)} className="size-4 accent-emerald-700" />
@@ -143,11 +146,11 @@ export default function CarsManager() {
         {shown.map((car) => (
           <li key={car.id} className="flex items-center gap-4 p-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={car.image} alt="" className="h-14 w-24 rounded-lg bg-slate-200 object-cover" />
+            <img src={car.images[0] ?? car.image} alt="" className="h-14 w-24 rounded-lg bg-white object-contain ring-1 ring-black/5" />
             <div className="min-w-0 flex-1">
               <p className="font-bold">{car.name}{car.nameEn && <span className="font-normal text-slate-500"> · <bdi dir="ltr">{car.nameEn}</bdi></span>}</p>
               <p className="text-xs text-slate-500">
-                {catName(car.category)}{car.year ? ` · موديل ${car.year}` : ""}
+                {catName(car.category)}{car.year ? ` · موديل ${car.year}` : ""} · {car.images.length} صور
               </p>
             </div>
             <button onClick={() => toggle(car)}

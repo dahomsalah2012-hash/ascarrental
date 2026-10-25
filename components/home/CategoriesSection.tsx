@@ -9,6 +9,7 @@ import SectionTitle from "@/components/ui/SectionTitle";
 import { pick } from "@/lib/dict";
 import { useI18n } from "@/components/layout/LangProvider";
 import { useBooking } from "@/components/booking/BookingProvider";
+import CarSlider from "../ui/CarSlider";
 
 type Props = {
   categories: Category[];
@@ -92,7 +93,7 @@ export default function CategoriesSection({ categories, cars: allCars }: Props) 
                   const carName = pick(lang, car.name, car.nameEn);
                   return (
                     <article key={car.id} className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
-                      <Photo src={car.image} alt={carName} className="h-48 w-full" sizes="(min-width:1024px) 33vw, 50vw" />
+                      <CarSlider images={car.images} alt={car.name} className="aspect-[16/10] w-full" />
                       <div className="p-5">
                         <h3 className="text-lg font-extrabold">{carName}</h3>
                         {car.year && (

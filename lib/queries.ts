@@ -4,19 +4,23 @@ import type { Category } from "@/data/categories";
 import type { Car } from "@/data/cars";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const carFromRow = (r: any): Car => ({
-  id: r.id,
-  name: r.name,
-  nameEn: r.name_en ?? null,
-  category: r.category,
-  seats: r.seats,
-  transmission: r.transmission,
-  image: r.image,
-  year: r.year,
-  fuel: r.fuel,
-  features: r.features ?? [],
-  isActive: r.is_active,
-});
+const carFromRow = (r: any): Car => {
+  const images: string[] = r.images?.length ? r.images : r.image ? [r.image] : [];
+  return {
+    id: r.id,
+    name: r.name,
+    nameEn: r.name_en ?? null,
+    category: r.category,
+    seats: r.seats,
+    transmission: r.transmission,
+    image: images[0] ?? "",
+    images,
+    year: r.year,
+    fuel: r.fuel,
+    features: r.features ?? [],
+    isActive: r.is_active,
+  };
+};
 
 export const carToRow = (c: Omit<Car, "id">) => ({
   name: c.name,
@@ -24,7 +28,8 @@ export const carToRow = (c: Omit<Car, "id">) => ({
   category: c.category,
   seats: c.seats,
   transmission: c.transmission,
-  image: c.image,
+  image: c.images[0] ?? "",
+  images: c.images,
   year: c.year,
   fuel: c.fuel,
   features: c.features,

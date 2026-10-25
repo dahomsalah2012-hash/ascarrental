@@ -40,7 +40,7 @@ export async function toggleCar(car: Car): Promise<void> {
 }
 
 /* ---------- الصور: بنصغّرها وبنحوّلها webp قبل الرفع عشان الموقع يفضل سريع ---------- */
-async function compressImage(file: File, maxWidth: number): Promise<Blob> {
+async function compressImage(file: File | Blob, maxWidth: number): Promise<Blob> {
   const bitmap = await createImageBitmap(file);
   const scale = Math.min(1, maxWidth / bitmap.width);
   const canvas = document.createElement("canvas");
@@ -59,7 +59,7 @@ async function compressImage(file: File, maxWidth: number): Promise<Blob> {
 }
 
 export async function uploadImage(
-  file: File,
+  file: File | Blob,
   folder: "categories" | "cars",
 ): Promise<{ url?: string; error?: string }> {
   try {
