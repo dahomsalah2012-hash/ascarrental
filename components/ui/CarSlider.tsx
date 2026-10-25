@@ -1,6 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+
+const SWIPE_THRESHOLD = 40; // أقل مسافة سحب (بالبكسل) تتحسب swipe
 
 type Props = {
   images: string[];
@@ -20,29 +22,74 @@ export default function CarSlider({
   priority,
 }: Props) {
   const list = images.filter(Boolean);
+  const count = list.length;
+
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [hover, setHover] = useState(false);
+  const [touching, setTouching] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const startX = useRef<number | null>(null);
 
+  const paused = hover || touching;
+  const current = count ? index % count : 0;
+
+  const go = (i: number) => {
+    if (!count) return;
+    setIndex(((i % count) + count) % count);
+  };
+
+  // التبديل التلقائي: timeout بيتعاد ضبطه مع كل تغيير في index (يدوي أو تلقائي)
   useEffect(() => {
-    if (list.length < 2 || paused) return;
+    if (count < 2 || paused) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const t = setInterval(() => setIndex((i) => (i + 1) % list.length), interval);
-    return () => clearInterval(t);
-  }, [list.length, paused, interval]);
+    const t = setTimeout(() => setIndex((i) => (i + 1) % count), interval);
+    return () => clearTimeout(t);
+  }, [count, paused, interval, index]);
 
-  if (list.length === 0) {
+  function onPointerDown(e: React.PointerEvent) {
+    startX.current = e.clientX;
+    setTouching(true);
+  }
+
+  function onPointerUp(e: React.PointerEvent) {
+    const start = startX.current;
+    startX.current = null;
+    setTouching(false);
+    if (start === null || count < 2) return;
+
+    const dx = e.clientX - start;
+    if (Math.abs(dx) < SWIPE_THRESHOLD) return;
+
+    // في RTL السحب لليمين هو "التالي"، وفي LTR السحب لليسار
+    const rtl = rootRef.current ? getComputedStyle(rootRef.current).direction === "rtl" : false;
+    const forward = rtl ? dx > 0 : dx < 0;
+    go(current + (forward ? 1 : -1));
+  }
+
+  function onPointerCancel() {
+    startX.current = null;
+    setTouching(false);
+  }
+
+  if (count === 0) {
     return <div className={`relative overflow-hidden bg-slate-100 ${className}`} />;
   }
 
-  const current = index % list.length;
-  const next = (current + 1) % list.length;
-  const prev = (current - 1 + list.length) % list.length;
+  const next = (current + 1) % count;
+  const prev = (current - 1 + count) % count;
 
   return (
     <div
-      className={`relative overflow-hidden bg-white ${className}`}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      ref={rootRef}
+      className={`relative touch-pan-y select-none overflow-hidden bg-white ${className}`}
+      onPointerDown={onPointerDown}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerCancel}
+      onPointerEnter={(e) => e.pointerType === "mouse" && setHover(true)}
+      onPointerLeave={(e) => {
+        if (e.pointerType === "mouse") setHover(false);
+        onPointerCancel();
+      }}
     >
       {list.map((src, i) =>
         i === current || i === next || i === prev ? (
@@ -53,15 +100,33 @@ export default function CarSlider({
             fill
             sizes={sizes}
             priority={priority && i === 0}
-            className={`object-contain transition-opacity duration-700 ${i === current ? "opacity-100" : "opacity-0"}`}
+            draggable={false}
+            className={`pointer-events-none object-contain transition-opacity duration-500 ${
+              i === current ? "opacity-100" : "opacity-0"
+            }`}
           />
         ) : null,
       )}
 
-      {list.length > 1 && (
-        <div className="pointer-events-none absolute inset-x-0 bottom-2 flex justify-center gap-1.5" aria-hidden>
+      {count > 1 && (
+        <div className="absolute inset-x-0 bottom-1 flex justify-center">
           {list.map((_, i) => (
-            <span key={i} className={`h-1.5 rounded-full transition-all ${i === current ? "w-4 bg-emerald-700" : "w-1.5 bg-slate-300"}`} />
+            <button
+              key={i}
+              type="button"
+              onClick={() => go(i)}
+              onPointerDown={(e) => e.stopPropagation()}
+              onPointerUp={(e) => e.stopPropagation()}
+              aria-label={`الصورة ${i + 1} من ${count}`}
+              aria-current={i === current}
+              className="p-2"
+            >
+              <span
+                className={`block h-2 rounded-full transition-all ${
+                  i === current ? "w-5 bg-emerald-700" : "w-2 bg-slate-300"
+                }`}
+              />
+            </button>
           ))}
         </div>
       )}
