@@ -7,7 +7,7 @@ import { SEO } from "@/data/seo";
 import { SITE_URL } from "@/lib/site";
 import { FACEBOOK_URL, INSTAGRAM_URL, PHONE_TEL, TIKTOK_URL } from "@/data/contact";
 import "./globals.css";
-import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
+import { GoogleTagManager } from "@next/third-parties/google";
 const cairo = Cairo({ subsets: ["arabic", "latin"], variable: "--font-cairo", display: "swap" });
 
 export const metadata: Metadata = {
@@ -72,7 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <SiteChrome>{children}</SiteChrome>
           </BookingProvider>
         </LangProvider>
-        <GoogleAnalytics gaId="G-ZKSV70D646" />
+        
       </body>
     </html>
   );

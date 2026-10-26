@@ -11,7 +11,7 @@ export default function Photo({ src, alt, className = "", sizes = "100vw", prior
     <div className={`${pos} overflow-hidden bg-slate-200 ${className}`}>
       {src && !failed && (
         <Image src={src} alt={alt} fill sizes={sizes} priority={priority}
-          onError={() => setFailed(true)} className="object-cover" />
+          onError={() => setFailed(true)} className="object-contain" />
       )}
     </div>
   );

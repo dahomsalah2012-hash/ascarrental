@@ -39,7 +39,7 @@ export default function AdminPage() {
     <>
       <header className="bg-navy text-white">
         <div className="container-x flex h-16 items-center justify-between">
-          <h1 className="text-lg font-extrabold">لوحة تحكم الرحلة</h1>
+          <h1 className="text-lg font-extrabold">لوحة تحكم ASCarRental</h1>
           <div className="flex items-center gap-4 text-sm">
             <Link href="/" className="text-white/80 hover:text-white">عرض الموقع</Link>
             <button onClick={() => supabase.auth.signOut()} className="rounded-lg bg-white/10 px-3 py-1.5 hover:bg-white/20">

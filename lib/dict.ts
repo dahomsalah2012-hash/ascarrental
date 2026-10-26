@@ -1,7 +1,7 @@
 export type Lang = "ar" | "en";
 
 const ar = {
-  brand: "الرحلة لتأجير السيارات",
+  brand: "ASCarRental",
   metaDesc: "تأجير سيارات بأفضل الأسعار وخدمة موثوقة لتجربة سفر مريحة وآمنة",
   locale: "ar-EG",
   menu: "القائمة",
@@ -93,7 +93,7 @@ const ar = {
     tagline: "سفرك يبدأ من هنا",
     address: "مدينة الشيخ زايد، الجيزة",
     followUs: "تابعنا على",
-    rights: "جميع الحقوق محفوظة لـ الرحلة لتأجير السيارات © 2026",
+    rights: "جميع الحقوق محفوظة لـ ASCarRental © 2026",
   },
   floating: {
     call: "اتصل بنا",
@@ -107,7 +107,7 @@ const ar = {
 type Dict = typeof ar;
 
 const en: Dict = {
-  brand: "Alrihla Car Rental",
+  brand: "ASCarRental",
   metaDesc: "Car rental at the best prices with reliable service for a comfortable and safe trip",
   locale: "en-US",
   menu: "Menu",
@@ -199,7 +199,7 @@ const en: Dict = {
     tagline: "Your journey starts here",
     address: "Sheikh Zayed City, Giza",
     followUs: "Follow us",
-    rights: "All rights reserved to Alrihla Car Rental © 2026",
+    rights: "All rights reserved to ASCarRental © 2026",
   },
   floating: {
     call: "Call us",

@@ -12,15 +12,15 @@ export const SEO: Record<
   { siteName: string; title: string; description: string; keywords: string[] }
 > = {
   ar: {
-    siteName: "الرحلة لتأجير السيارات",
-    title: "الرحلة لتأجير السيارات | ايجار سيارات في القاهرة والجيزة والشيخ زايد",
+    siteName: "ASCarRental",
+    title: "ASCarRental | ايجار سيارات في القاهرة والجيزة والشيخ زايد",
     description:
       "ايجار سيارات بسائق وبدون سائق في الشيخ زايد والقاهرة والجيزة: سيارات اقتصادية وعائلية وفاخرة، توصيل واستلام من المطار، أفضل الأسعار وخدمة موثوقة.",
     keywords: toList(arKeywords),
   },
   en: {
-    siteName: "Alrihla Car Rental",
-    title: "Alrihla Car Rental | Rent a Car in Cairo, Giza & Sheikh Zayed, Egypt",
+    siteName: "ASCarRental",
+    title: "ASCarRental | Rent a Car in Cairo, Giza & Sheikh Zayed, Egypt",
     description:
       "Rent a car in Egypt with or without a driver. Economy, family and luxury cars, airport pickup and delivery, best prices and reliable service in Cairo and Giza.",
     keywords: toList(enKeywords),
